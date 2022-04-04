@@ -12,15 +12,15 @@ ja:DatasetTxnMem  rdfs:subClassOf  ja:RDFDataset .
 
 tdb:DatasetTDB  rdfs:subClassOf  ja:RDFDataset .
 
+ja:ViewGraph  rdfs:subClassOf  ja:Model .
+
 :service1  a                          fuseki:Service ;
         fuseki:dataset                :dataset ;
         fuseki:name                   "bikes" ;
         fuseki:serviceQuery           "" , "query" , "sparql" ;
         fuseki:serviceReadGraphStore  "get" ;
-        fuseki:serviceReadQuads       "" ;
         fuseki:serviceReadWriteGraphStore
                 "data" ;
-        fuseki:serviceReadWriteQuads  "" ;
         fuseki:serviceUpdate          "update" , "" ;
         fuseki:serviceUpload          "upload" .
 

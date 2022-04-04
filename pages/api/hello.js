@@ -1,13 +1,9 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 const jsonld = require('jsonld');
 const axios = require('axios');
 const fs = require('fs');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var xhr = new XMLHttpRequest();
 var convert = require('xml-js');
-
-export default async (req, res) => {
-
 
   const urls = [
     {
@@ -16,6 +12,10 @@ export default async (req, res) => {
     },
     {
         name:"Lille",
+        url:"https://opendata.lillemetropole.fr/api/records/1.0/search/?dataset=vlille-realtime&rows=242"
+    },
+    {
+        name:"Roubaix",
         url:"https://opendata.lillemetropole.fr/api/records/1.0/search/?dataset=vlille-realtime&rows=242"
     },
     {
@@ -29,6 +29,13 @@ export default async (req, res) => {
     
 ];
 
+const urlVoitures = [
+    {
+        name: "Paris",
+        url: "https://opendata.paris.fr/api/records/1.0/search/?dataset=belib-points-de-recharge-pour-vehicules-electriques-donnees-statiques&q=&facet=statut_pdc&facet=arrondissement&facet=code_insee_commune&facet=implantation_station&facet=nbre_pdc&facet=condition_acces&facet=gratuit&facet=paiement_acte&facet=paiement_cb&facet=paiement_autre&facet=reservation&facet=observations&facet=siren_amenageur&facet=date_mise_en_service&facet=accessibilite_pmr&facet=restriction_gabarit&facet=station_deux_roues&facet=puissance_nominale&facet=prise_type_ef&facet=prise_type_2&facet=prise_type_combo_ccs&facet=prise_type_chademo&facet=prise_type_autre&facet=prise_type_3&facet=horaires&facet=raccordement"
+    }
+]
+
 
 const urlsWeather = [
     {
@@ -38,6 +45,10 @@ const urlsWeather = [
     {
         name:"Lille",
         url:"https://api.openweathermap.org/data/2.5/weather?q=Lille&appid=dcf9521833af767bb716a06812acbba7&units=metric"
+    },
+    {
+        name:"Roubaix",
+        url:"https://api.openweathermap.org/data/2.5/weather?q=Roubaix&appid=dcf9521833af767bb716a06812acbba7&units=metric"
     },
     {
         name: "Lyon",
@@ -59,6 +70,7 @@ var Paris = (response,responseW) => {
     response = JSON.parse(response);
     responseW = JSON.parse(responseW);
     let array = response.records;
+    var city = "Paris"
     for (let index = 0; index < array.length; index++) {
         let id = array[index].datasetid;
         let name = array[index].fields.name;
@@ -69,7 +81,7 @@ var Paris = (response,responseW) => {
         let cycleAvailability = array[index].fields.numbikesavailable;
         let parkcapacity = array[index].fields.numdocksavailable;
         let temperature = Math.round(responseW.main.temp)
-        let station = {id, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
+        let station = {id, city, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
         stations.push(station);
     }
 };
@@ -78,6 +90,7 @@ var Lille = (response,responseW) => {
     response = JSON.parse(response);
     responseW = JSON.parse(responseW);
     let array = response.records;
+    var city = "Lille"
     for (let index = 0; index < array.length; index++) {
         let id = array[index].datasetid;
         let name = array[index].fields.nom;
@@ -86,7 +99,24 @@ var Lille = (response,responseW) => {
         let cycleAvailability = array[index].fields.nbvelosdispo;
         let parkcapacity = array[index].fields.nbplacesdispo;
         let temperature = Math.round(responseW.main.temp)
-        let station = {id, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
+        let station = {id, city, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
+        stations.push(station);
+    }
+};
+var Roubaix = (response,responseW) => {
+    response = JSON.parse(response);
+    responseW = JSON.parse(responseW);
+    let array = response.records;
+    var city = "Lille"
+    for (let index = 0; index < array.length; index++) {
+        let id = array[index].datasetid;
+        let name = array[index].fields.nom;
+        let lat = array[index].fields.geo[0];
+        let lng = array[index].fields.geo[1];
+        let cycleAvailability = array[index].fields.nbvelosdispo;
+        let parkcapacity = array[index].fields.nbplacesdispo;
+        let temperature = Math.round(responseW.main.temp)
+        let station = {id, city, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
         stations.push(station);
     }
 };
@@ -95,6 +125,7 @@ var Lyon = (response,responseW) => {
     response = JSON.parse(response);
     responseW = JSON.parse(responseW);
     let array = response.features;
+    var city = "Lyon"
     for (let index = 0; index < array.length; index++) {
         let id = response.name;
         let name = array[index].properties.name;
@@ -103,7 +134,7 @@ var Lyon = (response,responseW) => {
         let cycleAvailability = array[index].properties.available_bike_stands;
         let parkcapacity = array[index].properties.available_bikes;
         let temperature = Math.round(responseW.main.temp)
-        let station = {id, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
+        let station = {id, city, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
         stations.push(station);
     }
 };
@@ -112,6 +143,7 @@ var StEtienne = (response,responseW) => {
     response = JSON.parse(response);
     responseW = JSON.parse(responseW);
     let array = response.data.stations;
+    var city = "StEtienne"
     for (let index = 0; index < array.length; index++) {
         let id = array[index].station_id;
         let name = array[index].name;
@@ -120,7 +152,7 @@ var StEtienne = (response,responseW) => {
         let cycleAvailability = Math.trunc(array[index].capacity/3);
         let parkcapacity = Math.trunc(array[index].capacity/3*2); 
         let temperature = Math.round(responseW.main.temp)
-        let station = {id, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
+        let station = {id, city, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
         stations.push(station);
     }
 };
@@ -153,6 +185,9 @@ var getData = async () => {
             case "Lille":
                 Lille(response,responseW);
                 break;
+            case "Roubaix":
+                Roubaix(response,responseW);
+                break;
         }
     }
    return stations
@@ -163,13 +198,14 @@ var getData = async () => {
 
 
 async function main(){
-    stations = []
     const stat = await getData()
+    console.log("stats : ", stat)
     console.log("nombre de stations :",stat.length)
     const myjson = {
         "@context": {
         "@vocab" : "http://www.owl-ontologies.com/unnamed.owl/",
         "id" : "id",
+        "city" : "city",
         "name": "name",
         "bikeCapacity": "bikeCapacity",
         "parkCapacity": "parkCapacity",
@@ -206,9 +242,6 @@ async function main(){
     })
     return {"john":"doe"}
 }
+
 main()
-  res.status(200).json({"over":"data"})
-}
-
-
 
