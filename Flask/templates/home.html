@@ -1,0 +1,32 @@
+<!doctype html>
+
+<html>
+
+<body id='content'>
+  <link rel="stylesheet" type="text/css" href="static/style.css">
+    <h1 id='titre'> Welcome to our query displayer !</h1>
+    <h1>
+        <form action="http://localhost:5000/query" method="post">
+            <p>Enter query or select one:</p>
+            <p><input type="text" name="nm" id='nmbox' /></p>
+            <p><input type="submit" value="submit" id="submitbutton"/></p>
+        </form>
+        <form action="http://localhost:5000/queryselected" method="post">
+            <label for="query">Choose a query:</label>
+            <select name="query" id="query">
+  <option value="premiere" selected>Ici on met lenom de la query genre 'display all bikes' ou jsp</option>
+  <option value="deuxieme">et doncc ici y en a d'autres</option>
+  <option value="troisieme">bla</option>
+  <option value="quatrieme">blabla</option>
+  
+</select>
+            <p><input type="submit" value="submit" id="submitbutton"/></p>
+        </form>
+    </h1>
+</body>
+<div id='try'>
+  <p>
+    Dahmouche - Cazaux - Coutau
+  </p>
+  </body>
+</html>

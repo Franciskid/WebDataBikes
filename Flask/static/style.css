@@ -1,0 +1,34 @@
+
+
+#titre{
+    font-family: 'Lato', sans-serif;
+    font-weight: 900;
+    font-size: 2.5em;
+    color: red;
+   text-align: center;
+}
+#content{
+  background:beige;
+  
+}
+p {
+   text-align: center;
+}
+#nmbox{
+  padding: 20px 30px;
+  background-color: #8842;
+}
+form {
+   text-align: center;
+}
+#submitbutton{
+  background-color: black; 
+  
+  color: white;
+  padding: 10px 30px;
+  font-size: 15px;
+}
+#try{
+  background:green;
+  padding: 8px 30px;
+}
