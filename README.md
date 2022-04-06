@@ -5,11 +5,11 @@
 Welcome on our project page !
 
 To launch the project
-- run the fuseki-server.bat in the fuseki folder 
+- run the fuseki/fuseki-server.bat in the fuseki folder 
 - Go to the fuseki server : localhost:3030 
 - create dataset bikes
-- run node populate_fuseki.js to populate the fuseki database bikes 
-- run app.py
+- run node "fuseki Data code/populate_fuseki.js" to populate the fuseki database bikes 
+- run Flask/app.py
 - Go to the flask app server : localhost:5000
 
 Enjoy! 
