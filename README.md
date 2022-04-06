@@ -1,4 +1,4 @@
-# Web datamining & semantics Project
+# Web datamining & semantics Project  | DIA3
 
 ### By François COUTAU - Yanis DAHMOUCHE - Victor CAZAUX | DIA3
 
