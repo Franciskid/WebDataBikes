@@ -1,11 +1,11 @@
 const jsonld = require('jsonld');
 const axios = require('axios');
 const fs = require('fs');
+
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var xhr = new XMLHttpRequest();
-var convert = require('xml-js');
 
-  const urls = [
+  const bikes_urls = [
     {
         name: "Paris",
         url: "https://opendata.paris.fr/api/records/1.0/search/?dataset=velib-disponibilite-en-temps-reel&rows=1368&facet=name&refine.is_installed=OUI"
@@ -29,15 +29,7 @@ var convert = require('xml-js');
     
 ];
 
-const urlVoitures = [
-    {
-        name: "Paris",
-        url: "https://opendata.paris.fr/api/records/1.0/search/?dataset=belib-points-de-recharge-pour-vehicules-electriques-donnees-statiques&q=&facet=statut_pdc&facet=arrondissement&facet=code_insee_commune&facet=implantation_station&facet=nbre_pdc&facet=condition_acces&facet=gratuit&facet=paiement_acte&facet=paiement_cb&facet=paiement_autre&facet=reservation&facet=observations&facet=siren_amenageur&facet=date_mise_en_service&facet=accessibilite_pmr&facet=restriction_gabarit&facet=station_deux_roues&facet=puissance_nominale&facet=prise_type_ef&facet=prise_type_2&facet=prise_type_combo_ccs&facet=prise_type_chademo&facet=prise_type_autre&facet=prise_type_3&facet=horaires&facet=raccordement"
-    }
-]
-
-
-const urlsWeather = [
+const weather_urls = [
     {
         name: "Paris",
         url: "https://api.openweathermap.org/data/2.5/weather?q=Paris&appid=da1859f0499d4bc6292009f3df324379&units=metric"
@@ -61,14 +53,10 @@ const urlsWeather = [
     
 ];
 
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var xhr = new XMLHttpRequest();
-var convert = require('xml-js');
 
 let stations = []
-var Paris = (response,responseW) => {
+var Paris = (response,temperature) => {
     response = JSON.parse(response);
-    responseW = JSON.parse(responseW);
     let array = response.records;
     var city = "Paris"
     for (let index = 0; index < array.length; index++) {
@@ -80,15 +68,14 @@ var Paris = (response,responseW) => {
         
         let cycleAvailability = array[index].fields.numbikesavailable;
         let parkcapacity = array[index].fields.numdocksavailable;
-        let temperature = Math.round(responseW.main.temp)
+        
         let station = {id, city, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
         stations.push(station);
     }
 };
 
-var Lille = (response,responseW) => {
+var Lille = (response,temperature) => {
     response = JSON.parse(response);
-    responseW = JSON.parse(responseW);
     let array = response.records;
     var city = "Lille"
     for (let index = 0; index < array.length; index++) {
@@ -98,15 +85,14 @@ var Lille = (response,responseW) => {
         let lng = array[index].fields.geo[1];
         let cycleAvailability = array[index].fields.nbvelosdispo;
         let parkcapacity = array[index].fields.nbplacesdispo;
-        let temperature = Math.round(responseW.main.temp)
+        
         let station = {id, city, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
         stations.push(station);
     }
 };
 
-var Roubaix = (response,responseW) => {
+var Roubaix = (response,temperature) => {
     response = JSON.parse(response);
-    responseW = JSON.parse(responseW);
     let array = response.records;
     var city = "Roubaix"
     for (let index = 0; index < array.length; index++) {
@@ -116,15 +102,14 @@ var Roubaix = (response,responseW) => {
         let lng = array[index].fields.geo_shape.coordinates[1];
         let cycleAvailability = 0;
         let parkcapacity = 10;
-        let temperature = Math.round(responseW.main.temp)
+        
         let station = {id, city, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
         stations.push(station);
     }
 };
 
-var Lyon = (response,responseW) => {
+var Lyon = (response,temperature) => {
     response = JSON.parse(response);
-    responseW = JSON.parse(responseW);
     let array = response.features;
     var city = "Lyon"
     for (let index = 0; index < array.length; index++) {
@@ -134,15 +119,15 @@ var Lyon = (response,responseW) => {
         let lng = Number(array[index].properties.lng);
         let cycleAvailability = array[index].properties.available_bike_stands;
         let parkcapacity = array[index].properties.available_bikes;
-        let temperature = Math.round(responseW.main.temp)
+
         let station = {id, city, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
+
         stations.push(station);
     }
 };
 
-var StEtienne = (response,responseW) => {
+var StEtienne = (response,temperature) => {
     response = JSON.parse(response);
-    responseW = JSON.parse(responseW);
     let array = response.data.stations;
     var city = "StEtienne"
     for (let index = 0; index < array.length; index++) {
@@ -152,7 +137,6 @@ var StEtienne = (response,responseW) => {
         let lng = array[index].lon;
         let cycleAvailability = Math.trunc(array[index].capacity/3);
         let parkcapacity = Math.trunc(array[index].capacity/3*2); 
-        let temperature = Math.round(responseW.main.temp)
         let station = {id, city, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
         stations.push(station);
     }
@@ -168,30 +152,30 @@ var callUrl = async (url) => {
 };
 
 
-var getData = async () => {
-    for (let index = 0; index < urls.length; index++) {
-        const response = await callUrl(urls[index].url)
-        const responseW = await callUrl(urlsWeather[index].url)
-        console.log(index, urls[index].name)
-        switch (urls[index].name) {
+var initialize_data = async () => {
+    for (let index = 0; index < bikes_urls.length; index++) {
+        const bikes_city = await callUrl(bikes_urls[index].url)
+        const weather_city = await callUrl(weather_urls[index].url)
+        console.log("city : ", bikes_urls[index].name)
+        switch (bikes_urls[index].name) {
             case "StEtienne":
-                StEtienne(response,responseW);
+                StEtienne(bikes_city, JSON.parse(weather_city).main.temp);
                 break;
             case "Lyon":
-                Lyon(response,responseW);
+                Lyon(bikes_city, JSON.parse(weather_city).main.temp);
                 break;
             case "Paris":
-                Paris(response,responseW);
+                Paris(bikes_city, JSON.parse(weather_city).main.temp);
                 break;
             case "Lille":
-                Lille(response,responseW);
+                Lille(bikes_city, JSON.parse(weather_city).main.temp);
                 break;
             case "Roubaix":
-                Roubaix(response,responseW);
+                Roubaix(bikes_city, JSON.parse(weather_city).main.temp);
                 break;
         }
     }
-   return stations
+   return stations;
 };
 
 
@@ -199,10 +183,10 @@ var getData = async () => {
 
 
 async function main(){
-    const stat = await getData()
-    console.log("stats : ", stat)
-    console.log("nombre de stations :",stat.length)
-    const myjson = {
+    const data = await initialize_data();
+    console.log("nombre de stations :",data.length);
+
+    const json_graph = {
         "@context": {
         "@vocab" : "http://www.owl-ontologies.com/unnamed.owl/",
         "id" : "id",
@@ -214,12 +198,13 @@ async function main(){
         "lng":"lng",
         "temperature":"temperature"
         },
-        "@graph": stat
-    }
+        "@graph": data
+    };
     
-    const ntrip = await jsonld.toRDF(myjson, {format: 'application/n-quads'});
-    fs.writeFileSync('./bikes.nt',ntrip)
-    const resDelete = await axios({
+    const bikesnt = await jsonld.toRDF(json_graph, {format: 'application/n-quads'});
+    fs.writeFileSync('./bikes.nt',bikesnt);
+
+    await axios({
         method: "POST",
         url: "http://localhost:3030/bikes/",
         headers : {
@@ -231,17 +216,16 @@ async function main(){
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
         
         clear default`
-    })
+    });
 
-    const resUpdate = await axios({
+    await axios({
         method: "POST",
         url: "http://localhost:3030/bikes",
-        data: ntrip,
+        data: bikesnt,
         headers: {
             'Content-Type': 'application/n-triples'
         }
-    })
-    return {"john":"doe"}
+    });
 }
 
 main()
