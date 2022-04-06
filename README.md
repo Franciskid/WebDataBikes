@@ -1,6 +1,6 @@
 # Web datamining & semantics Project
 
-### By François COUTAU - Yanis DAHMOUCHE - Victor CAZAUX 
+### By François COUTAU - Yanis DAHMOUCHE - Victor CAZAUX   DIA3
 
 Welcome on our project page !
 
