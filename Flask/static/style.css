@@ -32,3 +32,7 @@ form {
   background:green;
   padding: 8px 30px;
 }
+#queryname{
+    text-align: center;
+    color: blue
+}
