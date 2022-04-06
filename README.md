@@ -14,4 +14,4 @@ To launch the project
 
 Enjoy! 
 
-video on yt at url :
+video on yt at url : https://youtu.be/UFDJsylZgWo
