@@ -16,7 +16,7 @@ var convert = require('xml-js');
     },
     {
         name:"Roubaix",
-        url:"https://opendata.lillemetropole.fr/api/records/1.0/search/?dataset=vlille-realtime&rows=242"
+        url:"https://opendata.roubaix.fr/api/records/1.0/search/?dataset=implantation-des-arceaux-velos-a-roubaix&q=&facet=type&facet=annee"
     },
     {
         name: "Lyon",
@@ -107,14 +107,14 @@ var Roubaix = (response,responseW) => {
     response = JSON.parse(response);
     responseW = JSON.parse(responseW);
     let array = response.records;
-    var city = "Lille"
+    var city = "Roubaix"
     for (let index = 0; index < array.length; index++) {
         let id = array[index].datasetid;
-        let name = array[index].fields.nom;
+        let name = array[index].fields.localisation;
         let lat = array[index].fields.geo[0];
         let lng = array[index].fields.geo[1];
-        let cycleAvailability = array[index].fields.nbvelosdispo;
-        let parkcapacity = array[index].fields.nbplacesdispo;
+        let cycleAvailability = 0;
+        let parkcapacity = 0;
         let temperature = Math.round(responseW.main.temp)
         let station = {id, city, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
         stations.push(station);
