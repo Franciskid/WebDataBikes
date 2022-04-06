@@ -1,5 +1,55 @@
 from ast import Str
+from tkinter.tix import PopupMenu
 import requests 
+import folium
+
+def Carte(lat, lon):
+    m = folium.Map(location=[lat, lon], zoom_start=12, tiles="Stamen Terrain")
+
+    tooltip = "Cliquez-moi pour afficher les informations !"
+
+    query = f"""
+    PREFIX stat: <http://www.owl-ontologies.com/unnamed.owl/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>  
+PREFIX xmlns: <http://test.org/onto.owl#>
+
+SELECT *
+
+WHERE {{
+        ?s stat:id ?id .
+        ?s stat:city ?city .
+        ?s stat:name ?name .
+        ?s stat:bikeCapacity ?bikeCapacity .
+        ?s stat:parkCapacity ?parkCapacity .
+        ?s stat:lng ?lng .
+        ?s stat:lat ?lat .
+        ?s stat:temperature ?temperature
+    }}"""
+    response = requests.post('http://localhost:3030/bikes', data={'query':query})
+    
+    result = response.json()['results']['bindings']
+    str = []
+    for obj in result:
+        str.append([float(obj["lat"]["value"]), float(obj["lng"]["value"]), f'{obj["id"]["value"]}', obj["city"]["value"], obj["name"]["value"], obj["bikeCapacity"]["value"], obj["parkCapacity"]["value"], obj["temperature"]["value"]])
+    
+    for x in str:
+        folium.Marker([x[0], x[1]], tooltip = tooltip, popup=f"""<h3 style="color:#CD5C5C";>Informations</h3>
+<ul>
+    <li><b>Id</b> : {x[2]}</li>
+    <li><b>Ville</b> : {x[3]}</li>
+    <li><b>Nom</b> : {x[4]}</li>
+    <li><b>Bike Capacity</b> : {x[5]}</li>
+    <li><b>Park Capacity</b> : {x[6]}</li>
+    <li><b>Temperature</b> : {x[7]}°C</li>
+</ul>""").add_to(m)
+
+
+    return m
+
+
+
 
 def StationsProches(lat, lon):
     # print('enter a longitutde')
@@ -79,7 +129,7 @@ ORDER BY DESC(?name)"""
 
 
 
-def StationsForParis():
+def StationsForCity(city):
     
     query = f"""
     PREFIX stat: <http://www.owl-ontologies.com/unnamed.owl/>
@@ -95,7 +145,7 @@ SELECT *
 WHERE
 {{
   ?s stat:bikeCapacity ?bikeCapacity .
-  FILTER (?city = "Paris") .
+  FILTER (?city = "{city}") .
   ?s stat:name ?name .
   ?s stat:parkCapacity ?parkCapacity .
   ?s stat:city ?city .
