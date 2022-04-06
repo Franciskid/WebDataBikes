@@ -4,16 +4,43 @@
 
 <body id='content'>
   <link rel="stylesheet" type="text/css" href="static/style.css">
-    <h1 id='titre'> Here's the results !</h1>
-    <h3 id="queryname">
-      Query :
-      {{intitule_query}}
-    </h3>
-    <h2 id="result"> {{queryresult}}</h2>
+  <h1 id='titre'> Here's the results !</h1>
+  <h3 id="queryname">
+    Query :
+    {{intitule_query}}
+  </h3>
+  <h2 id="result">
+    <table style="margin-left: auto; margin-right: auto;">
+      <thead>
+        <tr>
+          {% for row in queryresult[0] %}
+          <th>
+            {{row}}
+          </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for valrow in queryresult[1] %}
+        <tr>
+          {% for row2 in valrow %}
+          <td style="padding: 0 100px;">
+            {{row2}}
+          </td>
+          
+          {% endfor %}
+        </tr>
+        
+        {% endfor %}
+      </tbody>
+    </table>
+  </h2>
 </body>
+
 <div id='try'>
   <p>
     Dahmouche - Cazaux - Coutau
   </p>
   </body>
+</div>
 </html>

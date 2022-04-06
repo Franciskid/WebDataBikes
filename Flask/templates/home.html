@@ -3,33 +3,67 @@
 <html>
 
 <body id='content'>
-  <link rel="stylesheet" type="text/css" href="static/style.css">
+  <form action="http://localhost:5000/queryselected" method="post">
+    <link rel="stylesheet" type="text/css" href="static/style.css">
     <h1 id='titre'> Welcome to our query displayer !</h1>
     <h1>
-        <form action="http://localhost:5000/query" method="post">
-            <p>Enter query or select one:</p>
-            <p><input type="text" name="nm" id='nmbox' /></p>
-            <p><input type="submit" value="submit" id="submitbutton"/></p>
-        </form>
-        <form action="http://localhost:5000/queryselected" method="post">
-            <label for="query">Choose a query:</label>
-            <select name="query" id="query">
-  <option value="premiere" selected>Ici on met lenom de la query genre 'display all bikes' ou jsp</option>
-  <option value="deuxieme">et doncc ici y en a d'autres</option>
-  <option value="troisieme">bla</option>
-  <option value="quatrieme">blabla</option>
-  <option value="cinquieme">blablaar</option>
-  <option value="sizieme">blablazerr</option>
-  <option value="septieme">blablazerr</option>
-  
-</select>
-            <p><input type="submit" value="submit" id="submitbutton"/></p>
-        </form>
+      <p>Enter query or select one:</p>
+      <p><input type="text" name="nm" id='nmbox' /></p>
+      <p><input type="submit" value="submit" id="submitbutton" /></p>
+        <label for="query">Choose a query:</label>
+        <select name="query" id="query">
+          <option value="premiere" selected>Query des stations</option>
+          <option value="deuxieme">Query des stations proches</option>
+          <option value="troisieme">Query des stations à la capacité > 50</option>
+          <option value="quatrieme">Query des stations à Paris</option>
+
+        </select>
+        <p><input type="submit" value="submit" id="submitbutton" /></p>
     </h1>
 </body>
 <div id='try'>
   <p>
     Dahmouche - Cazaux - Coutau
   </p>
-  </body>
+  <p >
+     Vos coordonnées : 
+  </p>
+  <select name="latlonlat" id="latlonlat" hidden>
+    <option value="lat"></option>
+  </select>
+  <select name="latlonlon" id="latlonlon" hidden>
+    <option value="lon"></option>
+  </select>
+  <p id="lat" name="lat">
+     Latitude :
+  </p>
+  <p id="lon" name="lon">
+    Longitude :
+
+  </p>
+</div>
+
+</form>
+</body>
+
+<script>
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      lat.innerHTML = "Geolocation is not supported by this browser.";
+    }
+  }
+  
+  function showPosition(position) {
+    lat.innerHTML = position.coords.latitude
+    lon.innerHTML = position.coords.longitude;
+    latlonlat.options[0].value = position.coords.latitude
+    latlonlat.options[0].innerHTML = position.coords.latitude
+    latlonlon.options[0].value = position.coords.longitude
+    latlonlon.options[0].innerHTML = position.coords.longitude
+  }
+  getLocation();
+</script>
+
 </html>
