@@ -1,13 +1,19 @@
 <!doctype html>
+
 <html>
-   <body>
-      <table border = 1>
-         {% for key, value in result.items() %}
-            <tr>
-               <th> {{ key }} </th>
-               <td> {{ value }} </td>
-            </tr>
-         {% endfor %}
-      </table>
-   </body>
+
+<body id='content'>
+  <link rel="stylesheet" type="text/css" href="static/style.css">
+    <h1 id='titre'> Here's the results !</h1>
+    <h3 id="queryname">
+      Query :
+      {{intitule_query}}
+    </h3>
+    <h2 id="result"> {{queryresult}}</h2>
+</body>
+<div id='try'>
+  <p>
+    Dahmouche - Cazaux - Coutau
+  </p>
+  </body>
 </html>
