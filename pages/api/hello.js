@@ -103,6 +103,7 @@ var Lille = (response,responseW) => {
         stations.push(station);
     }
 };
+
 var Roubaix = (response,responseW) => {
     response = JSON.parse(response);
     responseW = JSON.parse(responseW);
@@ -111,10 +112,10 @@ var Roubaix = (response,responseW) => {
     for (let index = 0; index < array.length; index++) {
         let id = array[index].datasetid;
         let name = array[index].fields.localisation;
-        let lat = array[index].fields.geo[0];
-        let lng = array[index].fields.geo[1];
+        let lat = array[index].fields.geo_shape.coordinates[0];
+        let lng = array[index].fields.geo_shape.coordinates[1];
         let cycleAvailability = 0;
-        let parkcapacity = 0;
+        let parkcapacity = 10;
         let temperature = Math.round(responseW.main.temp)
         let station = {id, city, name, lat, lng, bikeCapacity : cycleAvailability, parkCapacity : parkcapacity,temperature:temperature};
         stations.push(station);
